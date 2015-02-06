@@ -1,0 +1,25 @@
+// $v-app-background-color: #000;
+
+@import "../valo/valo.scss";
+
+@mixin scop {
+  @include valo;
+}
+
+// Make panel footer have top border and remove bottom border
+.v-panel-footer {
+  border-top: 1px solid #D5D5D5;
+  border-bottom-style: none;
+}
+
+.v-panel-footer-button {
+  margin: 10px 0;
+}
+
+.v-centered {
+  text-align: center;
+}
+
+.v-slot-v-centered {
+  height: 10%;
+}
