@@ -83,7 +83,7 @@ class MainUI extends UI {
     panelFooterLayout.addComponent(addNewTodoButton)
     panelFooterLayout.setComponentAlignment(addNewTodoButton, Alignment.MIDDLE_RIGHT)
 
-    def todoListTitleLabel = new Label('Sample Todo List Application')
+    def todoListTitleLabel = new Label('Todo List App')
     todoListTitleLabel.addStyleName('h1')
     todoListTitleLabel.addStyleName('align-center')
 
