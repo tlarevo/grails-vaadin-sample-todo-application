@@ -44,25 +44,77 @@ class MainUI extends UI {
     bodyLayout.setWidth('60%')
     bodyLayout.setHeight('100%')
 
-    def todoListLayout = new VerticalLayout()
-    todoListLayout.setSizeFull()
-    // todoListLayout.addComponent(todoRowLayout)
-    addTodo(todoListLayout)
+    def appTitleLayout = createAppTitle()
 
-    // def todosPanel = new Panel('Todos')
-    def todosPanel = new CssLayout()
-    todosPanel.setWidth('100%')
-    todosPanel.addStyleName('card')
+    def todosPanelLayout = createTodoListPanel()
 
-    def panelCaptionLayout = new HorizontalLayout()
-    panelCaptionLayout.setWidth('100%')
-    panelCaptionLayout.addStyleName('v-panel-caption')
+    bodyLayout.addComponent(appTitleLayout)
+    bodyLayout.addComponent(todosPanelLayout)
+
+    bodyLayout.setExpandRatio(appTitleLayout, 2.0f)
+    bodyLayout.setExpandRatio(todosPanelLayout, 8.0f)
+
+    bodyLayout.setSpacing(true)
+    bodyLayout.setMargin(true)
+
+    mainLayout.setSpacing(true)
+    mainLayout.setMargin(true)
+
+    mainLayout.addComponent(bodyLayout)
+    mainLayout.setComponentAlignment(bodyLayout, Alignment.TOP_CENTER)
+    // Set content for UI
+    setContent(mainLayout)
+  }
+
+  def createAppTitle(){
+    def appTitleLabel = new Label('Todo List App')
+    appTitleLabel.addStyleName('h1')
+    appTitleLabel.addStyleName('align-center')
+
+    def appTitleLayout = new HorizontalLayout()
+    appTitleLayout.setSizeFull()
+    appTitleLayout.addComponent(appTitleLabel)
+    appTitleLayout.setComponentAlignment(appTitleLabel, Alignment.BOTTOM_CENTER)
+    return appTitleLayout
+  }
+
+  def createTodoListPanel(){
+    def todosPanelLayout = new CssLayout()
+    todosPanelLayout.setWidth('100%')
+    todosPanelLayout.addStyleName('card')
+    // Create Panel Header
+    def panelHeaderLayout = createTodoListPanelHeader()
+    // Create Panel Content - Todo List
+    def panelContentLayout = createTodoListPanelContent()
+    // Create Panel Footer
+    def panelFooterLayout = createTodoListPanelFooter(panelContentLayout)
+
+    todosPanelLayout.addComponent(panelHeaderLayout)
+    todosPanelLayout.addComponent(panelContentLayout)
+    todosPanelLayout.addComponent(panelFooterLayout)
+    return todosPanelLayout
+  }
+
+  def createTodoListPanelHeader(){
+    def panelHeaderLayout = new HorizontalLayout()
+    panelHeaderLayout.setWidth('100%')
+    panelHeaderLayout.addStyleName('v-panel-caption')
     def panelTitleLabel = new Label('Todo List')
     panelTitleLabel.addStyleName('h2')
     panelTitleLabel.addStyleName('bold')
-    panelCaptionLayout.addComponent(panelTitleLabel)
-    panelCaptionLayout.setExpandRatio(panelTitleLabel, 1)
+    panelHeaderLayout.addComponent(panelTitleLabel)
+    panelHeaderLayout.setExpandRatio(panelTitleLabel, 1)
+    return panelHeaderLayout
+  }
 
+  def createTodoListPanelContent(){
+    def panelContentLayout = new VerticalLayout()
+    panelContentLayout.setSizeFull()
+    createTodo(panelContentLayout)
+    return panelContentLayout
+  }
+
+  def createTodoListPanelFooter(panelContentLayout){
     def panelFooterLayout = new HorizontalLayout()
     panelFooterLayout.addStyleName('v-panel-footer')
     panelFooterLayout.setWidth('100%')
@@ -76,59 +128,21 @@ class MainUI extends UI {
     addNewTodoButton.addStyleName('small')
     addNewTodoButton.addStyleName('v-panel-footer-button')
     addNewTodoButton.addClickListener({event ->
-      addTodo(todoListLayout)
+      createTodo(panelContentLayout)
     })
-
-
     panelFooterLayout.addComponent(addNewTodoButton)
     panelFooterLayout.setComponentAlignment(addNewTodoButton, Alignment.MIDDLE_RIGHT)
-
-    def todoListTitleLabel = new Label('Todo List App')
-    todoListTitleLabel.addStyleName('h1')
-    todoListTitleLabel.addStyleName('align-center')
-
-    def todoListTitleLayout = new HorizontalLayout()
-    todoListTitleLayout.setSizeFull()
-    todoListTitleLayout.addComponent(todoListTitleLabel)
-    todoListTitleLayout.setComponentAlignment(todoListTitleLabel, Alignment.BOTTOM_CENTER)
-
-    // todosPanel.addComponent(todoListTitleLabel)
-    todosPanel.addComponent(panelCaptionLayout)
-    todosPanel.addComponent(todoListLayout)
-    todosPanel.addComponent(panelFooterLayout)
-
-    bodyLayout.addComponent(todoListTitleLayout)
-    bodyLayout.addComponent(todosPanel)
-    bodyLayout.setExpandRatio(todoListTitleLayout, 2.0f)
-    bodyLayout.setExpandRatio(todosPanel, 8.0f)
-
-    bodyLayout.setSpacing(true)
-    bodyLayout.setMargin(true)
-
-    mainLayout.setSpacing(true)
-    mainLayout.setMargin(true)
-
-    mainLayout.addComponent(bodyLayout)
-    mainLayout.setComponentAlignment(bodyLayout, Alignment.TOP_CENTER)
-    // Set content for UI
-    setContent(mainLayout)
-
+    return panelFooterLayout
   }
 
-  def addTodo(todoListLayout){
+  def createTodo(todoListLayout){
     def todoRowLayout = new HorizontalLayout()
     def checkBoxLayout = new HorizontalLayout()
     def textFieldLayout = new HorizontalLayout()
 
     todoRowLayout.setSizeFull()
-
     checkBoxLayout.setSizeFull()
-    // checkBoxLayout.setSpacing(true)
-    // checkBoxLayout.setMargin(true)
-
     textFieldLayout.setSizeFull()
-    // textFieldLayout.setSpacing(true)
-    // textFieldLayout.setMargin(true)
 
     def todoCheckBox = new CheckBox()
     def todoTextField = new TextField()
@@ -136,10 +150,9 @@ class MainUI extends UI {
     checkBoxLayout.addComponent(todoCheckBox)
     checkBoxLayout.setComponentAlignment(todoCheckBox, Alignment.MIDDLE_RIGHT)
 
-
     todoTextField.setWidth('100%')
     todoTextField.addStyleName('borderless')
-    todoTextField.setInputPrompt('What is to be done ?...')
+    todoTextField.setInputPrompt('What needs to be done ?...')
     textFieldLayout.addComponent(todoTextField)
     textFieldLayout.setComponentAlignment(todoTextField, Alignment.MIDDLE_RIGHT)
 
@@ -147,18 +160,22 @@ class MainUI extends UI {
     todoRowLayout.addComponent(textFieldLayout)
 
     todoCheckBox.addValueChangeListener({event ->
-      if(todoCheckBox.value) {
-        Notification.show("${todoTextField.value} is done!")
-        todoTextField.setEnabled(false)
+      if (todoTextField.value) {
+        if(todoCheckBox.value) {
+          Notification.show("${todoTextField.value} is done!", Notification.Type.HUMANIZED_MESSAGE)
+          todoTextField.setEnabled(false)
+        } else {
+          Notification.show("${todoTextField.value} is not done yet!", Notification.Type.HUMANIZED_MESSAGE)
+          todoTextField.setEnabled(true)
+        }
       } else {
-        Notification.show("${todoTextField.value} is not done yet!")
-        todoTextField.setEnabled(true)
+        Notification.show("Please add a task first!", Notification.Type.WARNING_MESSAGE)
+        todoCheckBox.value = false
       }
-
     })
 
     todoRowLayout.setExpandRatio(checkBoxLayout, 0.5f)
     todoRowLayout.setExpandRatio(textFieldLayout, 9.5f)
-    todoListLayout.addComponent(todoRowLayout)
+    todoListLayout.addComponentAsFirst(todoRowLayout)
   }
 }
