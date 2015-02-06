@@ -101,7 +101,13 @@ class MainUI extends UI {
     bodyLayout.addComponent(todosPanel)
     bodyLayout.setExpandRatio(todoListTitleLayout, 2.0f)
     bodyLayout.setExpandRatio(todosPanel, 8.0f)
-    
+
+    bodyLayout.setSpacing(true)
+    bodyLayout.setMargin(true)
+
+    mainLayout.setSpacing(true)
+    mainLayout.setMargin(true)
+
     mainLayout.addComponent(bodyLayout)
     mainLayout.setComponentAlignment(bodyLayout, Alignment.TOP_CENTER)
     // Set content for UI
@@ -115,8 +121,14 @@ class MainUI extends UI {
     def textFieldLayout = new HorizontalLayout()
 
     todoRowLayout.setSizeFull()
+
     checkBoxLayout.setSizeFull()
+    // checkBoxLayout.setSpacing(true)
+    // checkBoxLayout.setMargin(true)
+
     textFieldLayout.setSizeFull()
+    // textFieldLayout.setSpacing(true)
+    // textFieldLayout.setMargin(true)
 
     def todoCheckBox = new CheckBox()
     def todoTextField = new TextField()
