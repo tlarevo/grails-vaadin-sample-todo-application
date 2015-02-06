@@ -35,11 +35,11 @@ class MainUI extends UI {
 
     println "Handling the request"
 
-    /*  def window = new Window();*/
     def mainLayout = new VerticalLayout()
     def bodyLayout = new VerticalLayout()
 
-    mainLayout.setSizeFull()
+    mainLayout.setWidth('100%')
+    mainLayout.setHeightUndefined() // This activates the vertical scrollbar when needed
     // Set body to 60% of the screen
     bodyLayout.setWidth('60%')
     bodyLayout.setHeight('100%')
@@ -147,8 +147,14 @@ class MainUI extends UI {
     todoRowLayout.addComponent(textFieldLayout)
 
     todoCheckBox.addValueChangeListener({event ->
-      Notification.show("${todoTextField.value} is done!")
-      todoTextField.setReadOnly(true)
+      if(todoCheckBox.value) {
+        Notification.show("${todoTextField.value} is done!")
+        todoTextField.setEnabled(false)
+      } else {
+        Notification.show("${todoTextField.value} is not done yet!")
+        todoTextField.setEnabled(true)
+      }
+
     })
 
     todoRowLayout.setExpandRatio(checkBoxLayout, 0.5f)
