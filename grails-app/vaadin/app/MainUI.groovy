@@ -1,7 +1,8 @@
 package app
 
-import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Theme
 import com.vaadin.server.VaadinRequest
+import com.vaadin.server.FontAwesome
 import com.vaadin.grails.Grails
 
 import com.vaadin.ui.UI
@@ -12,7 +13,6 @@ import com.vaadin.ui.CssLayout
 
 import com.vaadin.ui.Alignment
 import com.vaadin.ui.Window
-
 import com.vaadin.ui.Panel
 
 import com.vaadin.ui.Label
@@ -25,7 +25,7 @@ import com.vaadin.ui.TextField
 /**
 *
 *
-* @author
+* @author Tharindu Abeydeera
 */
 @Theme("scop")
 class MainUI extends UI {
@@ -128,14 +128,19 @@ class MainUI extends UI {
     addNewTodoButton.addStyleName('small')
     addNewTodoButton.addStyleName('v-panel-footer-button')
     addNewTodoButton.addClickListener({event ->
+      if (panelContentLayout.getComponent(0).class.is('com.vaadin.ui.Label')) {
+        Notification.show("Class is ${panelContentLayout.getComponent(0).class}")
+        panelContentLayout.removeComponent(panelContentLayout.getComponent(0))
+      }
       createTodo(panelContentLayout)
+      // if(panelContentLayout.getComponent(0))
     })
     panelFooterLayout.addComponent(addNewTodoButton)
     panelFooterLayout.setComponentAlignment(addNewTodoButton, Alignment.MIDDLE_RIGHT)
     return panelFooterLayout
   }
 
-  def createTodo(todoListLayout){
+  def createTodo(panelContentLayout){
     def todoRowLayout = new HorizontalLayout()
     def checkBoxLayout = new HorizontalLayout()
     def textFieldLayout = new HorizontalLayout()
@@ -156,9 +161,6 @@ class MainUI extends UI {
     textFieldLayout.addComponent(todoTextField)
     textFieldLayout.setComponentAlignment(todoTextField, Alignment.MIDDLE_RIGHT)
 
-    todoRowLayout.addComponent(checkBoxLayout)
-    todoRowLayout.addComponent(textFieldLayout)
-
     todoCheckBox.addValueChangeListener({event ->
       if (todoTextField.value) {
         if(todoCheckBox.value) {
@@ -174,8 +176,50 @@ class MainUI extends UI {
       }
     })
 
+    def todoEditButtonLayout = createTodoEditButton()
+    def todoDeleteButtonLayout = createTodoDeleteButton(panelContentLayout, todoRowLayout)
+
+    todoRowLayout.addComponent(checkBoxLayout)
+    todoRowLayout.addComponent(textFieldLayout)
+    todoRowLayout.addComponent(todoEditButtonLayout)
+    todoRowLayout.addComponent(todoDeleteButtonLayout)
+
+
     todoRowLayout.setExpandRatio(checkBoxLayout, 0.5f)
-    todoRowLayout.setExpandRatio(textFieldLayout, 9.5f)
-    todoListLayout.addComponentAsFirst(todoRowLayout)
+    todoRowLayout.setExpandRatio(textFieldLayout, 8.5f)
+    todoRowLayout.setExpandRatio(todoEditButtonLayout, 0.5f)
+    todoRowLayout.setExpandRatio(todoDeleteButtonLayout, 0.5f)
+    panelContentLayout.addComponentAsFirst(todoRowLayout)
+  }
+
+  def createTodoDeleteButton(panelContentLayout, todoRowLayout){
+    def todoDeleteButton = new Button()
+    todoDeleteButton.setIcon(FontAwesome.TIMES_CIRCLE)
+    todoDeleteButton.addStyleName("borderless-colored")
+    todoDeleteButton.addStyleName("small")
+    todoDeleteButton.addStyleName("icon-only")
+    todoDeleteButton.addClickListener({event ->
+      panelContentLayout.removeComponent(todoRowLayout)
+      Notification.show("Todo removed!")
+      if (panelContentLayout.getComponentCount().equals(0)){
+        createTodo(panelContentLayout)
+      }
+    })
+
+    def todoDeleteButtonLayout = new HorizontalLayout()
+    todoDeleteButtonLayout.addComponent(todoDeleteButton)
+    return todoDeleteButtonLayout
+  }
+
+  def createTodoEditButton(){
+    def todoEditButton = new Button()
+    todoEditButton.setIcon(FontAwesome.PENCIL)
+    todoEditButton.addStyleName("borderless-colored")
+    todoEditButton.addStyleName("small")
+    todoEditButton.addStyleName("icon-only")
+
+    def todoEditButtonLayout = new HorizontalLayout()
+    todoEditButtonLayout.addComponent(todoEditButton)
+    return todoEditButtonLayout
   }
 }
