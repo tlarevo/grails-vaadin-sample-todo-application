@@ -45,8 +45,10 @@ class MainUI extends UI {
     bodyLayout.setHeight('100%')
 
     def appTitleLayout = createAppTitle()
+    appTitleLayout.addStyleName('titleview')
 
     def todosPanelLayout = createTodoListPanel()
+    todosPanelLayout.addStyleName('appview')
 
     bodyLayout.addComponent(appTitleLayout)
     bodyLayout.addComponent(todosPanelLayout)
@@ -60,6 +62,8 @@ class MainUI extends UI {
     mainLayout.setSpacing(true)
     mainLayout.setMargin(true)
 
+    // bodyLayout.addStyleName('appview')
+
     mainLayout.addComponent(bodyLayout)
     mainLayout.setComponentAlignment(bodyLayout, Alignment.TOP_CENTER)
     // Set content for UI
@@ -67,8 +71,10 @@ class MainUI extends UI {
   }
 
   def createAppTitle(){
-    def appTitleLabel = new Label('Todo List App')
+    def appTitleLabel = new Label('The Todo App')
     appTitleLabel.addStyleName('h1')
+    appTitleLabel.addStyleName('bold')
+    appTitleLabel.addStyleName('white')
     appTitleLabel.addStyleName('align-center')
 
     def appTitleLayout = new HorizontalLayout()
@@ -128,10 +134,6 @@ class MainUI extends UI {
     addNewTodoButton.addStyleName('small')
     addNewTodoButton.addStyleName('v-panel-footer-button')
     addNewTodoButton.addClickListener({event ->
-      if (panelContentLayout.getComponent(0).class.is('com.vaadin.ui.Label')) {
-        Notification.show("Class is ${panelContentLayout.getComponent(0).class}")
-        panelContentLayout.removeComponent(panelContentLayout.getComponent(0))
-      }
       createTodo(panelContentLayout)
       // if(panelContentLayout.getComponent(0))
     })
@@ -176,14 +178,15 @@ class MainUI extends UI {
       }
     })
 
-    def todoEditButtonLayout = createTodoEditButton()
+    def todoEditButtonLayout = createTodoEditButton(todoTextField)
     def todoDeleteButtonLayout = createTodoDeleteButton(panelContentLayout, todoRowLayout)
 
     todoRowLayout.addComponent(checkBoxLayout)
     todoRowLayout.addComponent(textFieldLayout)
     todoRowLayout.addComponent(todoEditButtonLayout)
     todoRowLayout.addComponent(todoDeleteButtonLayout)
-
+    todoRowLayout.addStyleName('add-todo-animation')
+    todoRowLayout.addStyleName('todo-row')
 
     todoRowLayout.setExpandRatio(checkBoxLayout, 0.5f)
     todoRowLayout.setExpandRatio(textFieldLayout, 8.5f)
@@ -195,10 +198,13 @@ class MainUI extends UI {
   def createTodoDeleteButton(panelContentLayout, todoRowLayout){
     def todoDeleteButton = new Button()
     todoDeleteButton.setIcon(FontAwesome.TIMES_CIRCLE)
-    todoDeleteButton.addStyleName("borderless-colored")
-    todoDeleteButton.addStyleName("small")
-    todoDeleteButton.addStyleName("icon-only")
+    todoDeleteButton.addStyleName('borderless-colored')
+    todoDeleteButton.addStyleName('small')
+    todoDeleteButton.addStyleName('icon-only')
+    todoDeleteButton.addStyleName('hidden')
     todoDeleteButton.addClickListener({event ->
+      todoRowLayout.removeStyleName('add-todo-animation')
+      todoRowLayout.addStyleName('remove-todo-animation')
       panelContentLayout.removeComponent(todoRowLayout)
       Notification.show("Todo removed!")
       if (panelContentLayout.getComponentCount().equals(0)){
@@ -211,12 +217,17 @@ class MainUI extends UI {
     return todoDeleteButtonLayout
   }
 
-  def createTodoEditButton(){
+  def createTodoEditButton(todoTextField){
     def todoEditButton = new Button()
     todoEditButton.setIcon(FontAwesome.PENCIL)
-    todoEditButton.addStyleName("borderless-colored")
-    todoEditButton.addStyleName("small")
-    todoEditButton.addStyleName("icon-only")
+    todoEditButton.addStyleName('borderless-colored')
+    todoEditButton.addStyleName('small')
+    todoEditButton.addStyleName('icon-only')
+    todoEditButton.addStyleName('hidden')
+
+    todoEditButton.addClickListener({event ->
+      todoTextField.setEnabled(true)
+    })
 
     def todoEditButtonLayout = new HorizontalLayout()
     todoEditButtonLayout.addComponent(todoEditButton)

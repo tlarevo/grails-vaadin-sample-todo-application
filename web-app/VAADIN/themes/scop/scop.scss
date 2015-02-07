@@ -1,9 +1,43 @@
-// $v-app-background-color: #000;
+// $v-app-background: 'footer_lodyas.png';
+// $v-app-background-color: #DDD;
 
 @import "../valo/valo.scss";
 
 @mixin scop {
   @include valo;
+}
+
+.white {
+  color: #ffffff !important;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.todo-row:hover .hidden {
+  visibility: visible;
+}
+
+.titleview {
+  @include animation(800ms ease 10ms normal backwards 1 running valo-animate-in-slide-down, 600ms ease 100ms normal backwards 1 running valo-animate-in-fade);
+}
+
+.appview {
+  @include animation(800ms ease 10ms normal backwards 1 running valo-animate-in-slide-up, 600ms ease 100ms normal backwards 1 running valo-animate-in-fade);
+}
+
+
+.add-todo-animation {
+  @include animation(800ms ease 10ms normal backwards 1 running valo-animate-in-slide-left, 600ms ease 100ms normal backwards 1 running valo-animate-in-fade);
+}
+
+.remove-todo-animation {
+  @include animation(800ms ease 10ms normal backwards 1 running valo-animate-in-slide-right, 600ms ease 100ms normal backwards 1 running valo-animate-out-fade);
+}
+
+.scop.v-app {
+  background: url("images/footer_lodyas.png") repeat scroll 0% 0% transparent;
 }
 
 // Make panel footer have top border and remove bottom border
