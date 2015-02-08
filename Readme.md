@@ -27,3 +27,5 @@ https://grails.org
 
 Vaadin is a UI framework for Java and JVM languages for more information on Vaadin,
 https://vaadin.com/
+
+Background pattern from http://subtlepatterns.com, http://subtlepatterns.com/dark-sharp-edges/
