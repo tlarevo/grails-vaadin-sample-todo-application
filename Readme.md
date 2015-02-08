@@ -10,7 +10,7 @@ After cloning this repo, just navigate to app directory and run `./grailsw run-a
 3. Install __Grails__ using __gvm__
 4. Clone this repo to your preferred location
 5. Navigate into project folder and run `grails` which will get you to __grails__ console
-6. In grials console give the command `run-app`
+6. In grails console give the command `run-app`
 7. Application will compile and run and give you url to view it on the browser
 
 
