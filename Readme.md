@@ -20,7 +20,7 @@ GVM (Groovy Version Manager) for managing above software kits in similar fashion
 http://gvmtool.net
 
 Groovy is the JVM language (similar to JRuby) which was used in developing Grails for more info,
-http://groovy.codehaus.org
+http://groovy-lang.org
 
 Grails is Rails like framework written using Groovy for rapid application development for more info on Grails,
 https://grails.org
